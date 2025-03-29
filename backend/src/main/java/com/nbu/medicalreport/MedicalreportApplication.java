@@ -16,7 +16,6 @@ public class MedicalreportApplication {
 		String rawPassword = "admin";
 		System.out.println("Encoded password: " + passwordEncoder.encode(rawPassword));
 
-
 		SpringApplication.run(MedicalreportApplication.class, args);
 	}
 
