@@ -1,31 +1,30 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../auth/AuthContext';
 import BaseDashboard from './BaseDashboard';
-import Examination from '../examination/Examination'; // Import the Examination component
+import Examination from '../examination/Examination';
 
 const PatientDashboard = () => {
   const [patientData, setPatientData] = useState(null);
   const [examinations, setExaminations] = useState([]);
-  const [showExaminations, setShowExaminations] = useState(false); // State to control the visibility of examinations
-  const { authData } = useContext(AuthContext); // Assuming 'user' contains the authenticated user's data
+  const [showExaminations, setShowExaminations] = useState(false);
+  const [doctorData, setDoctorData] = useState(null);
+  const [specializationNames, setSpecializationNames] = useState([]);
+
+  const { authData } = useContext(AuthContext);
 
   const fetchPatientEndpoint = (id) => `http://localhost:8084/api/v1/patient/${id}`;
   const fetchExaminationsEndpoint = (id) => `http://localhost:8084/api/v1/examination/patient/${id}`;
+  const fetchDoctorEndpoint = (id) => `http://localhost:8084/api/v1/doctor/${id}`;
+  const fetchSpecializationsEndpoint = (id) => `http://localhost:8084/api/v1/specialization/${id}`;
 
-  // Function to toggle the examinations visibility
-  const toggleExaminations = () => setShowExaminations(prevState => !prevState);
+  const toggleExaminations = () => setShowExaminations(prev => !prev);
 
-  // Function to handle edit action for an examination
   const handleEditExamination = (examinationId) => {
-    // Navigate to the edit page (or handle edit logic here)
     console.log(`Editing examination with ID: ${examinationId}`);
   };
 
-  // Function to handle delete action for an examination
   const handleDeleteExamination = (examinationId) => {
-    // Perform the delete action (e.g., API call)
     console.log(`Deleting examination with ID: ${examinationId}`);
-    // Optionally, remove from the state after deletion
     setExaminations(examinations.filter(exam => exam.id !== examinationId));
   };
 
@@ -41,9 +40,27 @@ const PatientDashboard = () => {
       {patientData ? (
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold text-teal-600">Patient Information:</h3>
-          <p><strong className="text-gray-700">First Name:</strong> {patientData.firstName}</p>
-          <p><strong className="text-gray-700">Last Name:</strong> {patientData.lastName}</p>
-          <p><strong className="text-gray-700">Insurance Status:</strong> {patientData.insuranceStatus ? 'Paid' : 'Not Paid'}</p>
+          <p><strong className="text-gray-700">Name:</strong> {patientData.firstName} {patientData.lastName}</p>
+          <p><strong className="text-gray-700">EGN:</strong> {patientData.egn}</p>
+          <p><strong className="text-gray-700">Email:</strong> {patientData.email}</p>
+          <p><strong className="text-gray-700">Phone:</strong> {patientData.phone}</p>
+          <p><strong className="text-gray-700">Address:</strong> {patientData.address}</p>
+          <p><strong className="text-gray-700">Gender:</strong> {patientData.gender}</p>
+          <p><strong className="text-gray-700">Insurance Status:</strong> {patientData.hasPaidInsurance ? 'Paid' : 'Not Paid'}</p>
+
+          <p>
+            <strong className="text-gray-700">GP:</strong>{' '}
+            {doctorData ? (
+              <>
+               Dr. {doctorData.firstName} {doctorData.lastName}{' '}
+                <span className="text-sm text-gray-600">
+                  (Specializations: {specializationNames.join(', ')})
+                </span>
+              </>
+            ) : (
+              patientData.personalDoctorId || 'Not Assigned'
+            )}
+          </p>
         </div>
       ) : (
         <div className="bg-white p-6 rounded-lg shadow-md text-gray-500">
@@ -51,7 +68,6 @@ const PatientDashboard = () => {
         </div>
       )}
 
-      {/* Button to toggle examination list visibility */}
       <button
         onClick={toggleExaminations}
         className="w-full sm:w-auto mt-4 p-3 bg-teal-500 text-white font-semibold rounded-lg shadow-md hover:bg-teal-600 transition duration-300"
@@ -59,7 +75,6 @@ const PatientDashboard = () => {
         {showExaminations ? 'Hide Examinations' : 'Show Examinations'}
       </button>
 
-      {/* Conditionally render Examinations */}
       {showExaminations && (
         <div className="space-y-4 mt-6">
           {examinations.length > 0 ? (
@@ -83,23 +98,46 @@ const PatientDashboard = () => {
   );
 
   useEffect(() => {
-    if (authData && authData.userDTO.id) {
+    if (authData?.userDTO?.id) {
       const patientId = authData.userDTO.id;
 
-      // Fetch patient data and examinations concurrently
       Promise.all([
-        fetch(fetchPatientEndpoint(patientId)).then((response) => response.json()),
-        fetch(fetchExaminationsEndpoint(patientId)).then((response) => response.json()),
+        fetch(fetchPatientEndpoint(patientId)).then((res) => res.json()),
+        fetch(fetchExaminationsEndpoint(patientId)).then((res) => res.json())
       ])
         .then(([patientDataResponse, examinationsResponse]) => {
           setPatientData(patientDataResponse);
           setExaminations(examinationsResponse);
         })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
+        .catch((error) => console.error('Error fetching data:', error));
     }
-  }, [authData]); // Re-fetch data when user data changes
+  }, [authData]);
+
+  useEffect(() => {
+    if (patientData?.personalDoctorId) {
+      fetch(fetchDoctorEndpoint(patientData.personalDoctorId))
+        .then((res) => res.json())
+        .then((data) => {
+          setDoctorData(data);
+  
+          if (Array.isArray(data.specializationIds) && data.specializationIds.length > 0) {
+            fetch(fetchSpecializationsEndpoint(), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data.specializationIds)
+            })
+              .then((res) => res.json())
+              .then((specializations) => {
+                const names = specializations.map(s => s.name); // ✅ Extract names
+                setSpecializationNames(names);
+              })
+              .catch((err) => console.error('Error fetching specialization names:', err));
+          }
+        })
+        .catch((err) => console.error('Failed to fetch doctor data:', err));
+    }
+  }, [patientData]);
+  
 
   return (
     <BaseDashboard

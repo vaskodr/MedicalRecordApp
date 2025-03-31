@@ -32,12 +32,24 @@ const RegisterDoctor = ({ formData, setFormData }) => {
 
   // Handle GP radio button change
   const handleGPChange = (e) => {
-    const isGP = e.target.value === "true"; // Convert string to boolean
+    // Parse the string value to boolean
+    const isGP = e.target.value === "true";
+    console.log("Setting isGP to:", isGP); // Add logging to debug
     setFormData((prevFormData) => ({
       ...prevFormData,
-      isGP,
+      isGP: isGP,
     }));
   };
+
+  // Initialize isGP if it's undefined
+  useEffect(() => {
+    if (formData.isGP === undefined) {
+      setFormData(prev => ({
+        ...prev,
+        isGP: false // Default value
+      }));
+    }
+  }, [formData.isGP, setFormData]);
 
   return (
     <div className="space-y-6">
@@ -103,6 +115,11 @@ const RegisterDoctor = ({ formData, setFormData }) => {
             </label>
           </div>
         </div>
+      </div>
+      
+      {/* Debug information - can be removed in production */}
+      <div className="text-xs text-gray-500">
+        Current isGP value: {String(formData.isGP)}
       </div>
     </div>
   );

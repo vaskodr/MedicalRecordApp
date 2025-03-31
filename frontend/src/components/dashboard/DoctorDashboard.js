@@ -16,6 +16,12 @@ const DoctorDashboard = () => {
       >
         View Patient List
       </button>
+      <button
+        onClick={() => navigate('/doctor/dashboard/examination/')}
+        className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+      >
+        Examinate A Patient
+      </button>
     </div>
   );
 

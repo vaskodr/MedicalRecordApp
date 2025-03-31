@@ -127,7 +127,7 @@ const CreateExamination = () => {
                   className="mr-2"
                 />
                 <label htmlFor={`diagnosis-${diagnosis.id}`} className="text-gray-700">
-                  {diagnosis.description} (ID: {diagnosis.id})
+                  {diagnosis.diagnosis} (desc: {diagnosis.description})
                 </label>
               </div>
             ))}

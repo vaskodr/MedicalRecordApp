@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 
 const RegisterPatient = ({ formData, handleInputChange, setFormData }) => {
-  const [hasPaidHealthInsurance, setHasPaidHealthInsurance] = useState(formData.hasPaidHealthInsurance || null);
+  const [hasPaidInsurance, setHasPaidInsurance] = useState(formData.hasPaidInsurance || null);
   const [doctors, setDoctors] = useState([]); // List of doctors
-  const [selectedDoctor, setSelectedDoctor] = useState(formData.doctorId || "");
+  const [selectedDoctor, setSelectedDoctor] = useState(formData.personalDoctorId || "");
   const [egn, setEgn] = useState(formData.egn || "");
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8084/api/v1/doctor/list"
+          "http://localhost:8084/api/v1/doctor/gp-list"
         );
         const data = await response.json();
         setDoctors(data);
@@ -24,11 +24,11 @@ const RegisterPatient = ({ formData, handleInputChange, setFormData }) => {
 
   const handleHealthInsuranceChange = (e) => {
     const value = e.target.value === "yes";
-    setHasPaidHealthInsurance(value);
+    setHasPaidInsurance(value);
 
     setFormData((prevFormData) => ({
       ...prevFormData,
-      hasPaidHealthInsurance: value,
+      hasPaidInsurance: value,
     }));
   };
 
@@ -65,7 +65,7 @@ const RegisterPatient = ({ formData, handleInputChange, setFormData }) => {
               type="radio"
               name="healthInsurance"
               value="yes"
-              checked={hasPaidHealthInsurance === true}
+              checked={hasPaidInsurance === true}
               onChange={handleHealthInsuranceChange}
               className="form-radio h-5 w-5 text-blue-500"
             />
@@ -76,7 +76,7 @@ const RegisterPatient = ({ formData, handleInputChange, setFormData }) => {
               type="radio"
               name="healthInsurance"
               value="no"
-              checked={hasPaidHealthInsurance === false}
+              checked={hasPaidInsurance === false}
               onChange={handleHealthInsuranceChange}
               className="form-radio h-5 w-5 text-red-500"
             />
@@ -130,7 +130,6 @@ const RegisterPatient = ({ formData, handleInputChange, setFormData }) => {
       </div>
     </div>
   );
-  
 };
 
 export default RegisterPatient;
