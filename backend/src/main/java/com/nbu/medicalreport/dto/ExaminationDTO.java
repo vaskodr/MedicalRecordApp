@@ -15,4 +15,6 @@ public class ExaminationDTO {
     private Long doctorId;
     private Long patientId;
     private List<Long> diagnosisIds;
+
+    private Long sickLeaveId;
 }

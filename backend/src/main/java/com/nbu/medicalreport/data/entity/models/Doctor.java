@@ -2,6 +2,8 @@ package com.nbu.medicalreport.data.entity.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -17,7 +19,7 @@ public class Doctor extends User{
     private boolean isGP;
 
     @OneToMany(mappedBy = "personalDoctor")
-    private Set<Patient> registeredPatients;
+    private Set<Patient> registeredPatients = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -25,9 +27,9 @@ public class Doctor extends User{
             joinColumns = @JoinColumn(name = "doctor_id"),
             inverseJoinColumns = @JoinColumn(name = "specialization_id")
     )
-    private Set<Specialization> specializations;
+    private Set<Specialization> specializations = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
-    private Set<Examination> examinations;
+    private Set<Examination> examinations = new HashSet<>();
 
 }

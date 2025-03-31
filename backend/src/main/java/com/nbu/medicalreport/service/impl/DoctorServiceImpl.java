@@ -35,6 +35,13 @@ public class DoctorServiceImpl implements DoctorService {
                 .collect(Collectors.toList());
     }
 
+    public List<DoctorDTO> getGPDoctors() {
+        List<Doctor> gpDoctors = doctorRepository.findByIsGPTrue();
+        return gpDoctors.stream()
+                .map(this::convertToDoctorDTO)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public DoctorDTO getDoctorById(long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);

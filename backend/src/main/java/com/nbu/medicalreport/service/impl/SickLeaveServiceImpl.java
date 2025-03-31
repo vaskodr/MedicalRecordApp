@@ -53,6 +53,10 @@ public class SickLeaveServiceImpl implements SickLeaveService {
 
         sickLeaveRepository.save(sickLeave);
 
+        examination.setSickLeave(sickLeave);
+
+        examinationRepository.save(examination);
+
         return convertToSickLeaveDTO(sickLeave);
 
     }

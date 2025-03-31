@@ -23,6 +23,11 @@ public class DoctorApiController {
         return this.doctorService.getDoctors();
     }
 
+    @GetMapping("/gp-list")
+    public List<DoctorDTO> getAllGPDoctors() {
+        return this.doctorService.getGPDoctors();
+    }
+
     @GetMapping("/{id}")
     public DoctorDTO getDoctorById(@PathVariable int id) {
         return this.doctorService.getDoctorById(id);

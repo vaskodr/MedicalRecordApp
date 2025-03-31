@@ -59,8 +59,14 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         Diagnosis diagnosis = this.diagnosisRepository.findById(id)
                 .orElse(null);
 
-        mapperConfig.modelMapper().getConfiguration().setSkipNullEnabled(true);
-        mapperConfig.modelMapper().map(updateDiagnosisDTO, diagnosis);
+        if (null != updateDiagnosisDTO.getDiagnosis()) {
+            diagnosis.setDiagnosis(updateDiagnosisDTO.getDiagnosis());
+        }
+        if (null != updateDiagnosisDTO.getDescription()) {
+            diagnosis.setDescription(updateDiagnosisDTO.getDescription());
+        }
+
+        diagnosisRepository.save(diagnosis);
 
         return convertToDiagnosisDTO(diagnosis);
     }

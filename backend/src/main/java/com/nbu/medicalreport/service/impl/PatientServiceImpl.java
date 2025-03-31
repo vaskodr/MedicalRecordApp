@@ -67,6 +67,7 @@ public class PatientServiceImpl implements PatientService {
             throw new IllegalArgumentException("Invalid EGN provided");
         }
 
+        patient.setExaminations(new HashSet<>());
         mapperConfig.modelMapper().map(createPatientDTO, patient);
         patient.setPassword(passwordEncoder.encode(createPatientDTO.getPassword()));
         Set<Role> roles = new HashSet<>();

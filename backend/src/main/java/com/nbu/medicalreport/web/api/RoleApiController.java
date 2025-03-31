@@ -26,6 +26,11 @@ public class RoleApiController {
         return this.roleService.getRoleById(id);
     }
 
+    @GetMapping("/user/{id}")
+    public List<RoleDTO> getRolesByUserId(@PathVariable long id) {
+        return this.roleService.getRolesByUserId(id);
+    }
+
     @PostMapping
     public RoleDTO createRole(@RequestBody CreateRoleDTO createRoleDTO) {
         return this.roleService.createRole(createRoleDTO);

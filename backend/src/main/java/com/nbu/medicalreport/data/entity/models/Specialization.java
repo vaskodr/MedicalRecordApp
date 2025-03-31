@@ -6,6 +6,7 @@ import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,6 +17,6 @@ public class Specialization extends BaseEntity {
     private String name;
 
     @ManyToMany(mappedBy = "specializations")
-    private Set<Doctor> doctors;
+    private Set<Doctor> doctors = new HashSet<>();
 
 }

@@ -17,5 +17,6 @@ public interface DoctorService {
 
     List<GPPatientCountDTO> getPatientCountByGPs();
     long getTotalPatientCountByGPs();
+    List<DoctorDTO> getGPDoctors();
 
 }

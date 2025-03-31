@@ -24,6 +24,11 @@ public class PatientApiController {
         return this.patientService.getPatients();
     }
 
+    @GetMapping("/by-egn/{egn}")
+    public PatientDTO getPatientByEgn(@PathVariable String egn) {
+        return this.patientService.getPatientByEgn(egn);
+    }
+
     @GetMapping("/{id}")
     public PatientDTO getPatientById(@PathVariable int id){
         return this.patientService.getPatientById(id);

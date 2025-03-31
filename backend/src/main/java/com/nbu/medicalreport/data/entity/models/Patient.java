@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,6 @@ public class Patient extends User {
     private Doctor personalDoctor;
 
     @OneToMany(mappedBy = "patient")
-    private Set<Examination> examinations;
+    private Set<Examination> examinations = new HashSet<>();
 
 }

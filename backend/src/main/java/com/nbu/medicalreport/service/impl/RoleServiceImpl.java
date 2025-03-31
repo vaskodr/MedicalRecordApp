@@ -9,10 +9,8 @@ import com.nbu.medicalreport.service.RoleService;
 import com.nbu.medicalreport.dto.RoleDTO;
 import com.nbu.medicalreport.util.mapper.MapperConfig;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,6 +65,13 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void deleteRole(long id) {
         this.roleRepository.deleteById(id);
+    }
+
+    @Override
+    public List<RoleDTO> getRolesByUserId(long id) {
+        return roleRepository.findByUsers_Id(id).stream()
+                .map(this::convertToRoleDTO)
+                .collect(Collectors.toList());
     }
 
     private RoleDTO convertToRoleDTO(Role role) {

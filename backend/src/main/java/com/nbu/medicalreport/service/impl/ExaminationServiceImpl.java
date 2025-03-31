@@ -1,9 +1,6 @@
 package com.nbu.medicalreport.service.impl;
 
-import com.nbu.medicalreport.data.entity.models.Diagnosis;
-import com.nbu.medicalreport.data.entity.models.Doctor;
-import com.nbu.medicalreport.data.entity.models.Examination;
-import com.nbu.medicalreport.data.entity.models.Patient;
+import com.nbu.medicalreport.data.entity.models.*;
 import com.nbu.medicalreport.data.repository.DiagnosisRepository;
 import com.nbu.medicalreport.data.repository.DoctorRepository;
 import com.nbu.medicalreport.data.repository.ExaminationRepository;
@@ -14,6 +11,7 @@ import com.nbu.medicalreport.dto.records.DoctorVisitCountDTO;
 import com.nbu.medicalreport.dto.records.PatientsWithDiagnosisDTO;
 import com.nbu.medicalreport.service.ExaminationService;
 import com.nbu.medicalreport.service.PatientService;
+import com.nbu.medicalreport.service.SickLeaveService;
 import com.nbu.medicalreport.util.mapper.MapperConfig;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +33,7 @@ public class ExaminationServiceImpl implements ExaminationService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final DiagnosisRepository diagnosisRepository;
-    private final PatientService patientService;
+    private final SickLeaveService sickLeaveService;
 
     public List<ExaminationDTO> getExaminations() {
         List<Examination> examinations = examinationRepository.findAll();
@@ -63,6 +61,7 @@ public class ExaminationServiceImpl implements ExaminationService {
         examination.setPatient(patient);
         examination.setExaminationDate(createExaminationDTO.getExaminationDate());
         examination.setTreatment(createExaminationDTO.getTreatment());
+        examination.setSickLeave(null);
 
         if (createExaminationDTO.getDiagnosisIds() != null && !createExaminationDTO.getDiagnosisIds().isEmpty()) {
             List<Diagnosis> diagnoses = new ArrayList<>(
@@ -136,6 +135,15 @@ public class ExaminationServiceImpl implements ExaminationService {
                 .collect(Collectors.toList());
 
         dto.setDiagnosisIds(diagnosisIds);
+
+        if (examination.getSickLeave() != null) {
+            Long sickLeaveId = examination.getSickLeave().getId();
+
+            dto.setSickLeaveId(sickLeaveId);
+        } else {
+            dto.setSickLeaveId(null);
+        }
+
 
         return dto;
     }

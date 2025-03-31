@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,7 +24,7 @@ public class Examination extends BaseEntity {
             joinColumns = @JoinColumn(name = "examination_id"),
             inverseJoinColumns = @JoinColumn(name = "diagnosis_id")
     )
-    private Set<Diagnosis> diagnoses;
+    private Set<Diagnosis> diagnoses = new HashSet<>();
 
     @ManyToOne
     private Doctor doctor;

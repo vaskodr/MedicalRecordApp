@@ -63,6 +63,8 @@ public class AuthServiceImpl implements AuthService {
                     .toList();
 
             userDTO = mapperConfig.modelMapper().map(loggedInUser, UserDTO.class);
+            userDTO.setAuthorityIds(loggedInUser.getAuthorities()
+                    .stream().map(Role::getId).toList());
 
             if (authorities.contains("ROLE_PATIENT")) {
                 Patient patient = patientRepository.findById(loggedInUser.getId())
@@ -87,6 +89,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public String registerUser(RegistrationRequestDTO registrationRequestDTO) {
+
         if (registrationRequestDTO.getUserType().equals("patient")) {
             CreatePatientDTO patientDTO = new CreatePatientDTO();
             // Using ModelMapper to map the fields

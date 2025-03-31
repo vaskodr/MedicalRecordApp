@@ -21,6 +21,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("SELECT COUNT(p) FROM Patient p WHERE p.personalDoctor.isGP = true")
     long findTotalPatientCountByGPs();
 
+    List<Doctor> findByIsGPTrue();
+
 
 
 }
