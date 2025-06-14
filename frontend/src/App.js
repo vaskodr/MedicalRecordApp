@@ -18,6 +18,11 @@ import EditPatient from "./components/user/patient/EditPatient";
 import CreateExamination from "./components/examination/CreateExamination";
 import ExaminationPreview from "./components/examination/ExaminationPreview";
 import LoginUser from "./components/common/login/LoginUser";
+// Import sick leave components
+import SickLeaveList from "./components/sick-leave/SickLeaveList";
+import SickLeaveForm from "./components/sick-leave/SickLeaveForm";
+import SickLeaveStatistics from "./components/sick-leave/SickLeaveStatistics";
+import ExaminationList from "./components/examination/ExaminationList";
 
 function App() {
   return (
@@ -99,9 +104,60 @@ function App() {
               }
             />
 
+            {/* Admin Sick Leave Routes */}
+            <Route
+              path="/admin/dashboard/sick-leaves"
+              element={
+                <PrivateRoute authorities={["ROLE_ADMIN"]}>
+                  <SickLeaveList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/dashboard/sick-leaves/create/:examinationId"
+              element={
+                <PrivateRoute authorities={["ROLE_ADMIN"]}>
+                  <SickLeaveForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/dashboard/sick-leaves/edit/:id"
+              element={
+                <PrivateRoute authorities={["ROLE_ADMIN"]}>
+                  <SickLeaveForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/dashboard/sick-leaves/statistics"
+              element={
+                <PrivateRoute authorities={["ROLE_ADMIN"]}>
+                  <SickLeaveStatistics />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/dashboard/examination-list"
+              element={
+                <PrivateRoute authorities={["ROLE_ADMIN"]}>
+                  <ExaminationList />
+                </PrivateRoute>
+              }
+            />
+
             {/* Doctor Dashboard Routes */}
             <Route
               path="/doctor/dashboard"
+              element={
+                <PrivateRoute authorities={["ROLE_DOCTOR"]}>
+                  <DoctorDashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/doctor/dashboard/:doctorId/examiantion-list"
               element={
                 <PrivateRoute authorities={["ROLE_DOCTOR"]}>
                   <DoctorDashboard />
@@ -159,12 +215,56 @@ function App() {
               }
             />
 
+            {/* Doctor Sick Leave Routes */}
+            <Route
+              path="/doctor/dashboard/sick-leaves"
+              element={
+                <PrivateRoute authorities={["ROLE_DOCTOR"]}>
+                  <SickLeaveList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/doctor/dashboard/sick-leaves/create/:examinationId"
+              element={
+                <PrivateRoute authorities={["ROLE_DOCTOR"]}>
+                  <SickLeaveForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/doctor/dashboard/sick-leaves/edit/:id"
+              element={
+                <PrivateRoute authorities={["ROLE_DOCTOR"]}>
+                  <SickLeaveForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/doctor/dashboard/sick-leaves/statistics"
+              element={
+                <PrivateRoute authorities={["ROLE_DOCTOR"]}>
+                  <SickLeaveStatistics />
+                </PrivateRoute>
+              }
+            />
+
             {/* Patient Dashboard */}
             <Route
               path="/patient/dashboard"
               element={
                 <PrivateRoute authorities={["ROLE_PATIENT"]}>
                   <PatientDashboard />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Patient Sick Leave Routes (View Only) */}
+            <Route
+              path="/patient/dashboard/sick-leaves"
+              element={
+                <PrivateRoute authorities={["ROLE_PATIENT"]}>
+                  <SickLeaveList />
                 </PrivateRoute>
               }
             />
