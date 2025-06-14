@@ -3,6 +3,7 @@ package com.nbu.medicalreport.web.api;
 import com.nbu.medicalreport.dto.CreateDoctorDTO;
 import com.nbu.medicalreport.dto.DoctorDTO;
 import com.nbu.medicalreport.dto.UpdateDoctorDTO;
+import com.nbu.medicalreport.dto.records.DoctorSickLeaveResponse;
 import com.nbu.medicalreport.dto.records.GPPatientCountDTO;
 import com.nbu.medicalreport.service.DoctorService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,6 +55,12 @@ public class DoctorApiController {
     @GetMapping("/gp-patient-count")
     public ResponseEntity <List<GPPatientCountDTO>> findPatientCountByGPs() {
         return ResponseEntity.ok(doctorService.getPatientCountByGPs());
+    }
+
+    @GetMapping("/statistics/doctors-most-sick-leaves")
+    public ResponseEntity<List<DoctorSickLeaveResponse>> getDoctorsWithMostSickLeaves() {
+        List<DoctorSickLeaveResponse> doctors = doctorService.getDoctorsWithMostSickLeaves();
+        return ResponseEntity.ok(doctors);
     }
 
 

@@ -3,10 +3,12 @@ package com.nbu.medicalreport.service;
 import com.nbu.medicalreport.dto.CreateDoctorDTO;
 import com.nbu.medicalreport.dto.DoctorDTO;
 import com.nbu.medicalreport.dto.UpdateDoctorDTO;
+import com.nbu.medicalreport.dto.records.DoctorSickLeaveResponse;
 import com.nbu.medicalreport.dto.records.GPPatientCountDTO;
 import org.hibernate.sql.Update;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DoctorService {
     List<DoctorDTO> getDoctors();
@@ -18,5 +20,7 @@ public interface DoctorService {
     List<GPPatientCountDTO> getPatientCountByGPs();
     long getTotalPatientCountByGPs();
     List<DoctorDTO> getGPDoctors();
+
+    List<DoctorSickLeaveResponse> getDoctorsWithMostSickLeaves();
 
 }

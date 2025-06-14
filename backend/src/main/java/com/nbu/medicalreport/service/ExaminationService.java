@@ -5,6 +5,7 @@ import com.nbu.medicalreport.dto.records.DiagnosisFrequencyDTO;
 import com.nbu.medicalreport.dto.records.DoctorVisitCountDTO;
 import com.nbu.medicalreport.dto.records.PatientsWithDiagnosisDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ExaminationService {
@@ -22,6 +23,9 @@ public interface ExaminationService {
     List<DoctorVisitCountDTO> getVisitCountPerDoctor();
     List<PatientsWithDiagnosisDTO> getPatientsByDiagnosis(String diagnosisName);
     List<DiagnosisFrequencyDTO> getMostFrequentDiagnoses();
+
+    List<ExaminationDTO> getExaminationsByDateRange(LocalDate startDate, LocalDate endDate);
+    List<ExaminationDTO> getExaminationsByDoctorAndDateRange(Long doctorId, LocalDate startDate, LocalDate endDate);
 
     // TODO:
 

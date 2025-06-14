@@ -17,6 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -123,6 +124,22 @@ public class ExaminationServiceImpl implements ExaminationService {
 
     public List<DiagnosisFrequencyDTO> getMostFrequentDiagnoses() {
         return examinationRepository.findMostFrequentDiagnoses();
+    }
+
+    @Override
+    public List<ExaminationDTO> getExaminationsByDateRange(LocalDate startDate, LocalDate endDate) {
+        List<Examination> examinations = examinationRepository.findExaminationsByDateRange(startDate, endDate);
+        return examinations.stream()
+                .map(this::convertToExaminationDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ExaminationDTO> getExaminationsByDoctorAndDateRange(Long doctorId, LocalDate startDate, LocalDate endDate) {
+        List<Examination> examinations = examinationRepository.findExaminationsByDoctorAndDateRange(doctorId, startDate, endDate);
+        return examinations.stream()
+                .map(this::convertToExaminationDTO)
+                .collect(Collectors.toList());
     }
 
 

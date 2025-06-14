@@ -6,6 +6,7 @@ import com.nbu.medicalreport.dto.PatientDTO;
 import com.nbu.medicalreport.dto.UpdatePatientDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PatientService {
     List<PatientDTO> getPatients();
@@ -17,5 +18,5 @@ public interface PatientService {
     PatientDTO getPatientByEgn(String egn);
 
     List<com.nbu.medicalreport.dto.records.PatientDTO> getPatientsByDoctor(long doctorId);
-
+    //Map<Long, List<PatientDTO>> getPatientsForEachDoctors();
 }

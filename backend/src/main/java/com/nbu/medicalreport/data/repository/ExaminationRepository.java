@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ExaminationRepository extends JpaRepository<Examination, Long> {
@@ -34,5 +35,19 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
             "GROUP BY d.diagnosis " +
             "ORDER BY COUNT(d) DESC")
     List<DiagnosisFrequencyDTO> findMostFrequentDiagnoses();
+
+    @Query("SELECT e FROM Examination e " +
+            "WHERE e.examinationDate BETWEEN :startDate AND :endDate " +
+            "ORDER BY e.examinationDate DESC, e.doctor.doctorIdentity")
+    List<Examination> findExaminationsByDateRange(@Param("startDate") LocalDate startDate,
+                                                  @Param("endDate") LocalDate endDate);
+
+    @Query("SELECT e FROM Examination e " +
+            "WHERE e.doctor.id = :doctorId " +
+            "AND e.examinationDate BETWEEN :startDate AND :endDate " +
+            "ORDER BY e.examinationDate DESC")
+    List<Examination> findExaminationsByDoctorAndDateRange(@Param("doctorId") Long doctorId,
+                                                           @Param("startDate") LocalDate startDate,
+                                                           @Param("endDate") LocalDate endDate);
 
 }

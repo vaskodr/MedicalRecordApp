@@ -5,9 +5,12 @@ import com.nbu.medicalreport.dto.SickLeaveDTO;
 import com.nbu.medicalreport.dto.UpdateSickLeaveDTO;
 import com.nbu.medicalreport.service.SickLeaveService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/sick-leave")
@@ -38,5 +41,12 @@ public class SickLeaveApiController {
     @DeleteMapping("/{id}")
     public void deleteSickLeave(@PathVariable long id) {
         this.sickLeaveService.deleteSickLeave(id);
+    }
+
+    @GetMapping("/statistics/peak-month")
+    public ResponseEntity<Map<String, Object>> getMonthWithMostSickLeaves(
+            @RequestParam(required = false) Integer year) {
+        Map<String, Object> peakMonth = sickLeaveService.getMonthWithMostSickLeavesInYear(year);
+        return ResponseEntity.ok(peakMonth);
     }
 }

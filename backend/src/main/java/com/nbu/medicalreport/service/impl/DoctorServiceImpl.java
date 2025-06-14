@@ -7,6 +7,7 @@ import com.nbu.medicalreport.data.repository.SpecializationRepository;
 import com.nbu.medicalreport.dto.CreateDoctorDTO;
 import com.nbu.medicalreport.dto.DoctorDTO;
 import com.nbu.medicalreport.dto.UpdateDoctorDTO;
+import com.nbu.medicalreport.dto.records.DoctorSickLeaveResponse;
 import com.nbu.medicalreport.dto.records.GPPatientCountDTO;
 import com.nbu.medicalreport.service.DoctorService;
 import com.nbu.medicalreport.util.mapper.MapperConfig;
@@ -127,6 +128,19 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public long getTotalPatientCountByGPs() {
         return doctorRepository.findTotalPatientCountByGPs();
+    }
+
+    @Override
+    public List<DoctorSickLeaveResponse> getDoctorsWithMostSickLeaves() {
+        try {
+            List<DoctorSickLeaveResponse> doctors = doctorRepository.findDoctorsWithMostSickLeaves();
+            if (doctors != null && !doctors.isEmpty()) {
+                return doctors; // Return all doctors ranked by sick leaves
+            }
+            return List.of(DoctorSickLeaveResponse.noData());
+        } catch (Exception e) {
+            return List.of(DoctorSickLeaveResponse.noData());
+        }
     }
 
 

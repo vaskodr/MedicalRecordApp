@@ -6,9 +6,11 @@ import com.nbu.medicalreport.dto.records.DoctorVisitCountDTO;
 import com.nbu.medicalreport.dto.records.PatientsWithDiagnosisDTO;
 import com.nbu.medicalreport.service.ExaminationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -74,6 +76,25 @@ public class ExaminationApiController {
     public ResponseEntity<List<DiagnosisFrequencyDTO>> getMostFrequentDiagnoses() {
         List<DiagnosisFrequencyDTO> diagnoses = examinationService.getMostFrequentDiagnoses();
         return ResponseEntity.ok(diagnoses);
+    }
+
+    @GetMapping("/by-period")
+    public ResponseEntity<List<ExaminationDTO>> getExaminationsByPeriod(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        List<ExaminationDTO> examinations = examinationService.getExaminationsByDateRange(startDate, endDate);
+        return ResponseEntity.ok(examinations);
+    }
+
+    @GetMapping("/doctor/{doctorId}/by-period")
+    public ResponseEntity<List<ExaminationDTO>> getExaminationsByDoctorAndPeriod(
+            @PathVariable Long doctorId,
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        List<ExaminationDTO> examinations = examinationService.getExaminationsByDoctorAndDateRange(doctorId, startDate, endDate);
+        return ResponseEntity.ok(examinations);
     }
 
 //    @PostMapping("/doctor/{doctorId}")
