@@ -23,6 +23,10 @@ import SickLeaveList from "./components/sick-leave/SickLeaveList";
 import SickLeaveForm from "./components/sick-leave/SickLeaveForm";
 import SickLeaveStatistics from "./components/sick-leave/SickLeaveStatistics";
 import ExaminationList from "./components/examination/ExaminationList";
+import MedicalStatistics from "./components/statistics/Statistics";
+import GPPatientsPage from "./components/user/patient/GPPatientsList";
+import DoctorExaminationsList from "./components/examination/DoctorExaminationList";
+import EditExamination from "./components/examination/EditExamination";
 
 function App() {
   return (
@@ -137,6 +141,14 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route
+              path="/admin/dashboard/statistics"
+              element={
+                <PrivateRoute authorities={["ROLE_ADMIN"]}>
+                  <MedicalStatistics />
+                </PrivateRoute>
+              }
+            />
 
             <Route
               path="/admin/dashboard/examination-list"
@@ -241,10 +253,36 @@ function App() {
               }
             />
             <Route
-              path="/doctor/dashboard/sick-leaves/statistics"
+              path="/doctor/dashboard/statistics"
               element={
                 <PrivateRoute authorities={["ROLE_DOCTOR"]}>
-                  <SickLeaveStatistics />
+                  <MedicalStatistics />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/doctor/dashboard/gp-patients/:doctorId"
+              element={
+                <PrivateRoute authorities={["ROLE_DOCTOR"]}>
+                  <GPPatientsPage />
+                </PrivateRoute>
+              }
+            />
+            
+            <Route
+              path="/doctor/dashboard/:doctorId/examination-list"
+              element={
+                <PrivateRoute authorities={["ROLE_DOCTOR"]}>
+                  <DoctorExaminationsList />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/doctor/dashboard/examination/:examinationId/edit"
+              element={
+                <PrivateRoute authorities={["ROLE_DOCTOR"]}>
+                  <EditExamination />
                 </PrivateRoute>
               }
             />

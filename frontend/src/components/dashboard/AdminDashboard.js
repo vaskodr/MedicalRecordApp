@@ -92,7 +92,7 @@ const AdminDashboard = () => {
       description: 'Access system analytics and reports',
       icon: ChartBarIcon,
       color: 'pink',
-      path: '/admin/dashboard/sick-leaves/statistics'
+      path: '/admin/dashboard/statistics'
     }
   ];
 

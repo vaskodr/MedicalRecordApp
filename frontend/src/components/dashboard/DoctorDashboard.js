@@ -8,7 +8,8 @@ import {
   ChartBarIcon,
   UserIcon,
   CalendarDaysIcon,
-  AcademicCapIcon
+  AcademicCapIcon,
+  UsersIcon
 } from '@heroicons/react/24/outline';
 import BaseDashboard from './BaseDashboard';
 
@@ -22,35 +23,48 @@ const DoctorDashboard = () => {
       description: 'Access your patient list and medical records',
       icon: UserGroupIcon,
       color: 'blue',
-      path: '/doctor/dashboard/patient-list'
+      path: '/doctor/dashboard/patient-list',
+      type: 'static'
+    },
+    {
+      title: 'My GP Patients',
+      description: 'View patients registered under your GP practice',
+      icon: UsersIcon,
+      color: 'teal',
+      path: '/doctor/dashboard/gp-patients',
+      type: 'dynamic'
     },
     {
       title: 'Medical Diagnoses',
       description: 'Browse available diagnoses and medical conditions',
       icon: DocumentTextIcon,
       color: 'green',
-      path: '/doctor/dashboard/diagnoses'
+      path: '/doctor/dashboard/diagnoses',
+      type: 'static'
     },
     {
       title: 'Examination History',
       description: 'Review past examinations and patient visits',
       icon: ClipboardDocumentListIcon,
       color: 'purple',
-      path: '/doctor/dashboard/:doctorId/examination-list/'
+      path: '/doctor/dashboard/examination-list',
+      type: 'dynamic'
     },
     {
       title: 'Sick Leaves',
       description: 'Manage and issue sick leave certificates',
       icon: HeartIcon,
       color: 'orange',
-      path: '/doctor/dashboard/sick-leaves'
+      path: '/doctor/dashboard/sick-leaves',
+      type: 'static'
     },
     {
       title: 'Statistics',
       description: 'View medical statistics and reports',
       icon: ChartBarIcon,
       color: 'indigo',
-      path: '/doctor/dashboard/sick-leaves/statistics'
+      path: '/doctor/dashboard/statistics',
+      type: 'static'
     }
   ];
 
@@ -60,7 +74,8 @@ const DoctorDashboard = () => {
       green: 'bg-green-500 hover:bg-green-600 focus:ring-green-500',
       purple: 'bg-purple-500 hover:bg-purple-600 focus:ring-purple-500',
       orange: 'bg-orange-500 hover:bg-orange-600 focus:ring-orange-500',
-      indigo: 'bg-indigo-500 hover:bg-indigo-600 focus:ring-indigo-500'
+      indigo: 'bg-indigo-500 hover:bg-indigo-600 focus:ring-indigo-500',
+      teal: 'bg-teal-500 hover:bg-teal-600 focus:ring-teal-500'
     };
     return colorMap[color] || 'bg-gray-500 hover:bg-gray-600 focus:ring-gray-500';
   };
@@ -71,7 +86,8 @@ const DoctorDashboard = () => {
       green: 'bg-green-100 text-green-600',
       purple: 'bg-purple-100 text-purple-600',
       orange: 'bg-orange-100 text-orange-600',
-      indigo: 'bg-indigo-100 text-indigo-600'
+      indigo: 'bg-indigo-100 text-indigo-600',
+      teal: 'bg-teal-100 text-teal-600'
     };
     return iconColorMap[color] || 'bg-gray-100 text-gray-600';
   };
@@ -79,6 +95,24 @@ const DoctorDashboard = () => {
   const renderContent = (data, authData) => {
     const doctorData = data?.doctorDTO || {};
     const userData = authData?.userDTO || {};
+    const doctorId = doctorData.id || userData.id;
+    
+    // Debug logging to see what doctorId we're working with
+    console.log('Doctor Dashboard - doctorId:', doctorId);
+    console.log('Doctor Dashboard - doctorData:', doctorData);
+    console.log('Doctor Dashboard - userData:', userData);
+    console.log('Doctor Dashboard - authData:', authData);
+    
+    const getNavigationPath = (item) => {
+      if (item.type === 'dynamic') {
+        if (item.path === '/doctor/dashboard/gp-patients') {
+          return `/doctor/dashboard/gp-patients/${doctorId}`;
+        } else if (item.path === '/doctor/dashboard/examination-list') {
+          return `/doctor/dashboard/${doctorId}/examination-list`;
+        }
+      }
+      return item.path;
+    };
     
     return (
       <div className="p-6 max-w-7xl mx-auto">
@@ -94,6 +128,8 @@ const DoctorDashboard = () => {
                   Welcome back, Dr. {userData.lastName || userData.firstName || userData.username}!
                 </h1>
                 <p className="text-gray-600">Manage your patients and medical practice</p>
+                {/* Debug info - remove this in production */}
+                <p className="text-xs text-gray-400">Doctor ID: {doctorId}</p>
               </div>
             </div>
           </div>
@@ -206,6 +242,30 @@ const DoctorDashboard = () => {
           </div>
         </div>
 
+        {/* GP Practice Highlight Section */}
+        <div className="bg-gradient-to-r from-teal-500 to-cyan-600 rounded-lg p-6 text-white mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-white bg-opacity-20 rounded-lg">
+                <UsersIcon className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold">GP Practice Management</h3>
+                <p className="text-teal-100 mt-1">Manage patients registered under your general practice</p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                console.log('Navigating to GP patients with doctorId:', doctorId);
+                navigate(`/doctor/dashboard/gp-patients/${doctorId}`);
+              }}
+              className="px-6 py-3 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all duration-200 font-medium backdrop-blur-sm border border-white border-opacity-20"
+            >
+              View My GP Patients
+            </button>
+          </div>
+        </div>
+
         {/* Management Section */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-200">
@@ -217,10 +277,16 @@ const DoctorDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {managementItems.map((item, index) => {
                 const IconComponent = item.icon;
+                const itemPath = getNavigationPath(item);
+                
                 return (
                   <button
                     key={index}
-                    onClick={() => navigate(item.path)}
+                    onClick={() => {
+                      console.log(`Navigating to ${item.title} with path:`, itemPath);
+                      console.log('Using doctorId:', doctorId);
+                      navigate(itemPath);
+                    }}
                     className="group p-6 border border-gray-200 rounded-lg hover:border-blue-200 hover:shadow-md transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     <div className="flex items-center space-x-4">
@@ -292,6 +358,24 @@ const DoctorDashboard = () => {
                 className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all duration-200 text-sm font-medium backdrop-blur-sm"
               >
                 Find Patient
+              </button>
+              <button
+                onClick={() => {
+                  console.log('Quick action - navigating to GP patients with doctorId:', doctorId);
+                  navigate(`/doctor/dashboard/gp-patients/${doctorId}`);
+                }}
+                className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all duration-200 text-sm font-medium backdrop-blur-sm"
+              >
+                My GP Patients
+              </button>
+              <button
+                onClick={() => {
+                  console.log('Quick action - navigating to examinations with doctorId:', doctorId);
+                  navigate(`/doctor/dashboard/${doctorId}/examination-list`);
+                }}
+                className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-all duration-200 text-sm font-medium backdrop-blur-sm"
+              >
+                View Examinations
               </button>
               <button
                 onClick={() => navigate('/doctor/dashboard/sick-leaves/create/1')}
