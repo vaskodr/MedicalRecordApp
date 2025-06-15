@@ -50,9 +50,10 @@ public class PatientApiController {
     }
 
     @GetMapping("/by-doctor/{doctorId}")
-    public ResponseEntity<List<com.nbu.medicalreport.dto.records.PatientDTO>> getPatientsByDoctor(@PathVariable long doctorId) {
+    public ResponseEntity<List<PatientDTO>> getPatientsByDoctor(@PathVariable long doctorId) {
         // Assuming you have a method to find a doctor by their ID
-        List<com.nbu.medicalreport.dto.records.PatientDTO> patients = patientService.getPatientsByDoctor(doctorId);
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow();
+        List<PatientDTO> patients = patientService.getPatientsByDoctor(doctor);
         return ResponseEntity.ok(patients);
     }
 }

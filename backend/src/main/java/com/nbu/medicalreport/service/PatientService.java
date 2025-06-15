@@ -17,6 +17,6 @@ public interface PatientService {
 
     PatientDTO getPatientByEgn(String egn);
 
-    List<com.nbu.medicalreport.dto.records.PatientDTO> getPatientsByDoctor(long doctorId);
+    List<PatientDTO> getPatientsByDoctor(Doctor doctor);
     //Map<Long, List<PatientDTO>> getPatientsForEachDoctors();
 }

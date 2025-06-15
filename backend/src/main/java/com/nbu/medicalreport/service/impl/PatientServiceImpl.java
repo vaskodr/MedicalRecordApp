@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -106,10 +107,11 @@ public class PatientServiceImpl implements PatientService {
         return mapperConfig.modelMapper().map(this.patientRepository.findByEgn(egn), PatientDTO.class);
     }
 
-    @Override
-    public List<com.nbu.medicalreport.dto.records.PatientDTO> getPatientsByDoctor(long doctorId) {
-        Doctor doctor = doctorRepository.findById(doctorId).orElse(null);
-        return this.patientRepository.findPatientsByPersonalDoctor(doctor);
+    public List<PatientDTO> getPatientsByDoctor(Doctor doctor) {
+        List<Patient> patients = patientRepository.findPatientsByPersonalDoctor(doctor);
+        return patients.stream()
+                .map(this::convertToPatientDTO)
+                .collect(Collectors.toList());
     }
 
 
